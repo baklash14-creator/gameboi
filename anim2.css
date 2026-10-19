@@ -1,0 +1,31 @@
+/* GAME BOI animations, part 2 */
+@keyframes splashPop{from{transform:scale(0) rotate(-25deg);opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes wordIn{from{opacity:0;transform:translateY(24px) rotateX(-40deg)}}
+@keyframes pop{50%{transform:scale(1.35) translateY(-3px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}}
+@keyframes wiggle{25%{transform:rotate(-12deg) scale(1.1)}75%{transform:rotate(12deg) scale(1.1)}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes podRise{from{transform:scaleY(.15);opacity:0}}
+#splash{position:fixed;inset:0;z-index:100;background:#04060c;display:grid;place-content:center;justify-items:center;gap:12px;transition:opacity .5s,visibility .5s}
+#splash.out{opacity:0;visibility:hidden}
+#splash svg{width:100px;filter:drop-shadow(0 0 22px #39ff14);animation:splashPop .8s cubic-bezier(.2,1.4,.4,1) both,float 2.5s ease-in-out infinite .8s}
+#splash b{letter-spacing:7px;font-size:22px;color:#fff;animation:fadeUp .6s .3s both}
+#splash i{position:relative;width:150px;height:3px;border-radius:3px;background:#0b1634;overflow:hidden}
+#splash i::after{content:"";position:absolute;inset:0;background:#39ff14;box-shadow:0 0 12px #39ff14;transform-origin:left;animation:grow 1.4s ease both}
+#prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:40;background:linear-gradient(90deg,#3b82f6,#39ff14);box-shadow:0 0 10px #39ff14}
+.ticker{position:absolute;left:0;right:0;bottom:0;overflow:hidden;white-space:nowrap;background:#04060ccc;border-top:1px solid var(--line);padding:7px 0;font-size:11px;letter-spacing:3px;color:var(--mut)}
+.ticker div{display:inline-block;animation:marquee 30s linear infinite}.ticker span{margin:0 20px}.ticker span:nth-child(3n+1){color:var(--green)}
+.hero2:has(.ticker){padding-bottom:58px}
+.hero2-art{transform:translate(var(--px,0),var(--py,0));transition:transform .25s ease-out}
+.orb{transform:translate(calc(var(--px,0px)*-1.6),calc(var(--py,0px)*-1.6));transition:transform .3s ease-out}
+h1 .w{display:inline-block;animation:wordIn .65s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i)*90ms)}
+.btn:active{transform:scale(.95)}a.card:active{transform:scale(.985)}
+#bnav a.on svg{animation:pop .45s ease}
+.msg{animation:slideIn .3s ease}
+.logo:hover svg{animation:wiggle .6s ease}
+.gtile .gl{animation:spinSlow 40s linear infinite}
+.pod.rv.show{animation:podRise .8s cubic-bezier(.2,.8,.2,1) backwards}.pod.p1.rv.show{animation-delay:.55s}.pod.p2.rv.show{animation-delay:.3s}.pod.p3.rv.show{animation-delay:.1s}
+.tc{overflow:hidden}.tc::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(90deg,transparent,#ffffff16,transparent);transform:skewX(-20deg);pointer-events:none}.tc:hover::after{animation:sheen .9s}
+@media(prefers-reduced-motion:reduce){#splash,.ticker div,.gtile .gl{animation:none!important}#splash{display:none}}

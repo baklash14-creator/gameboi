@@ -1,0 +1,35 @@
+/* GAME BOI design pass 3: detail pages, forms, polish */
+html{scroll-behavior:smooth}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#1c2d5e;border-radius:9px}::-webkit-scrollbar-track{background:#04060c}
+a{transition:color .15s}a:hover{color:#9bffb0}
+h3{margin:.2em 0 .5em}.card p{margin:.4em 0}
+.card{position:relative;box-shadow:0 8px 24px #0006,inset 0 1px 0 #ffffff0d}
+/* banner */
+.banner{position:relative;overflow:hidden;border-radius:24px;padding:26px 22px;margin:6px 0 14px;border:1px solid hsl(var(--h) 70% 40% / .55);background:linear-gradient(135deg,hsl(var(--h) 80% 24%),hsl(var(--h) 70% 8%) 70%)}
+.banner::after{content:"";position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:hsl(var(--h) 100% 55% / .22);filter:blur(40px)}
+.banner h1{margin:6px 0;font-size:clamp(26px,6vw,42px);position:relative;z-index:1}.banner p,.banner .tc-game{position:relative;z-index:1}
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.facts>div{background:#0b1634;border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.facts span{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut)}.facts b{display:block;margin-top:4px;font-size:17px;color:#fff}
+.facts>div:first-child b,.facts>div:nth-child(2) b{color:var(--green)}
+.bar2.big{height:10px}
+/* call to action bar */
+.cta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0}.cta label{width:100%}
+@media(max-width:700px){.cta{position:sticky;bottom:78px;z-index:15;background:#060b1af2;backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;padding:10px}.cta .btn{flex:1;margin:0;text-align:center}}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:#12306e;border:1px solid #274088;border-radius:999px;padding:5px 12px;font-size:13px}
+/* forms */
+.formcard{max-width:640px;background:linear-gradient(160deg,#0f2147,#0a1530);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 10px 30px #0006}
+label{font-weight:600;color:#cfe0ff}label small{font-weight:400;color:var(--mut);font-size:12px}
+input,select,textarea{transition:border-color .15s,box-shadow .15s;min-height:44px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px #39ff1426}
+textarea{resize:vertical}input[type=datetime-local]{color-scheme:dark}
+select{appearance:none;background:#08122a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2339ff14' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center/12px;padding-right:34px}
+/* tables + misc */
+tr:nth-child(even) td{background:#ffffff05}tr:hover td{background:#39ff1408}
+.tag{background:#12306e;border:1px solid #274088}
+.empty{background:#0a1530}
+.msg{border-left:3px solid var(--green)}
+.warn{border-radius:14px}
+.row h1{margin:0}
