@@ -1,8 +1,0 @@
-/* Filters, utilities, mobile polish */
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
-.btn,.tabs button,.eye{min-height:40px}a.card{color:inherit;display:block}
-.card .tag+.tag{margin-left:2px}.empty a{color:var(--green)}
-button:disabled{cursor:not-allowed}
-::selection{background:var(--green);color:#041006}
-@media(max-width:700px){main{padding:14px 12px 50px}.bar{padding:8px 12px}.grid{grid-template-columns:1fr}}
-@supports(padding:max(0px)){body{padding-bottom:env(safe-area-inset-bottom)}}
