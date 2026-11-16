@@ -24,3 +24,19 @@ Not yet built: image upload UI, edit/pause/mark-sold listing UI, tournament edit
 
 ## Payments (Monime, optional)
 Run `supabase_schema_v3_payments.sql`. Deploy the three functions in `supabase/functions` (Supabase CLI: `supabase functions deploy create-checkout payment-verify` and `supabase functions deploy payment-webhook --no-verify-jwt`). Set secrets: `supabase secrets set MONIME_SPACE_ID=... MONIME_ACCESS_TOKEN=... SITE_URL=https://your-site WEBHOOK_SECRET=<long random>`. In Monime create a webhook pointing to the payment-webhook function URL with custom header `x-webhook-secret: <same secret>`. Test with a very small amount first. Until the secrets are set, paid tournaments show "Payments are not available".
+
+
+## Upgrade pack (v15)
+- **Listing photos**: up to 3 photos per listing (gallery on the listing page, thumbnail on cards). Run `supabase_schema_v5_images.sql` once in Supabase.
+- **Edit listing** (`#/edit/<id>`) and **edit tournament** (`#/edit-t/<id>`, text fields only; dates, fee and player limit stay locked).
+- **Smart Register button**: shows "You're registered", "Registration closed" or "Tournament full".
+- **Fixes**: `extra.css` did not exist, which stopped the offline cache (service worker) from installing; the contact email must be a real address; a prize pool of 0 now shows "None" instead of "Free"; route errors are logged to the browser console.
+- New files: `plus.js`, `plus.css`, `supabase_schema_v5_images.sql`.
+
+## Switching on Monime payments (checklist)
+1. In Monime, get your **Space ID** and an **access token**.
+2. Run `supabase_schema_v3_payments.sql` and `supabase_schema_v4_payments_view.sql` in Supabase.
+3. Deploy the functions: `create-checkout`, `payment-verify`, `payment-webhook` (Supabase CLI: `supabase functions deploy <name>`).
+4. Set the secrets (Supabase, Edge Functions, Secrets): Monime access token, Monime Space ID and `SITE_URL` (your site address, no trailing slash). See `supabase/functions/_shared/payments.ts` for the exact names.
+5. In Monime, add the webhook URL for `payment-webhook`.
+6. **Test with a very small paid tournament first.** Check the amount shown on the Monime page. The code sends the fee multiplied by 100 (minor units); if Monime shows 100 times too much or too little, tell me and it is a one-line fix.
