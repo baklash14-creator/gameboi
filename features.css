@@ -1,0 +1,31 @@
+/* GAME BOI features pack */
+.match.mine{border-left-color:#ffd54a;box-shadow:0 0 0 1px #ffd54a44}
+.chatlink{display:inline-block;margin-top:6px}
+.trow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.trow .btn{margin:0;flex:1 1 auto;text-align:center}
+.btn.live{background:#e0245e;color:#fff;box-shadow:0 0 14px #e0245e66}
+.vs{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.vs span{font-size:1.5rem;font-weight:800;color:var(--green)}
+.chatbox{height:46vh;min-height:240px;overflow-y:auto;background:#0a1530;border:1px solid #1b2a55;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.bub{max-width:82%;background:#14224a;border-radius:14px 14px 14px 4px;padding:8px 12px;word-break:break-word;align-self:flex-start}
+.bub small{display:block;opacity:.65;font-size:.72rem;margin-bottom:2px}
+.bub.me{align-self:flex-end;background:#12361a;border-radius:14px 14px 4px 14px}
+.bub.dispute{background:#4a1a26;border:1px solid #e0245e88}
+.chatf{display:flex;gap:8px;margin:10px 0}
+.chatf input{flex:1;min-width:0}.chatf .btn{margin:0}
+.pcard{text-align:center;margin:10px 0 16px}
+.av.big{width:84px;height:84px;font-size:2.2rem;margin:0 auto 8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.av.big img{width:100%;height:100%;object-fit:cover}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+.badges span{background:#14224a;border:1px solid #1b2a55;border-radius:999px;padding:5px 12px;font-size:.85rem}
+.sellerline{margin:4px 0 12px}.stars{color:#ffd54a}
+.starpick{display:flex;gap:2px;margin:8px 0;flex-direction:row-reverse;justify-content:flex-end}
+.starpick label{margin:0;cursor:pointer}.starpick input{display:none}
+.starpick span{font-size:2rem;color:#3a4a7a}
+.starpick label:hover span,.starpick label:hover~label span{color:#ffd54a}
+.starpick label:has(input:checked) span,.starpick label:has(input:checked)~label span{color:#ffd54a}
+.payrow{display:grid;grid-template-columns:auto 1fr 90px;gap:8px;align-items:center;margin:8px 0}
+.payrow .btn{grid-column:span 1;margin:0}
+.invlink{word-break:break-all;background:#0a1530;border-radius:10px;padding:10px;color:var(--green)}
+.alertbar{margin:12px 0}
+@media (max-width:560px){.payrow{grid-template-columns:auto 1fr}.payrow input{grid-column:2}.chatbox{height:50vh}}

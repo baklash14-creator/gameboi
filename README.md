@@ -40,3 +40,14 @@ Run `supabase_schema_v3_payments.sql`. Deploy the three functions in `supabase/f
 4. Set the secrets (Supabase, Edge Functions, Secrets): Monime access token, Monime Space ID and `SITE_URL` (your site address, no trailing slash). See `supabase/functions/_shared/payments.ts` for the exact names.
 5. In Monime, add the webhook URL for `payment-webhook`.
 6. **Test with a very small paid tournament first.** Check the amount shown on the Monime page. The code sends the fee multiplied by 100 (minor units); if Monime shows 100 times too much or too little, tell me and it is a one-line fix.
+
+## Features pack (v6)
+Run `supabase_schema_v6_features.sql` once in Supabase > SQL Editor. It adds: match chat + dispute reasons, prize payout tracking, seller ratings, player stats, stream links and automatic alerts (new match, status changes, chat).
+- Fixtures: Host > Fixtures page > Generate fixtures / Next round. Players get a notification when their match is ready.
+- Match chat: `Match chat` button on each fixture (players, host and admins only).
+- Player profiles: tap a name on the Leaderboard, or Dashboard > My public profile.
+- Prize payouts: host records places 1-3 and marks them paid (tracking only, no money moves).
+- Invite friends: Invite page and tournament button create a share card image.
+- Phone alerts: browser notifications while the app is open or installed. True background push needs a push server (VAPID keys) and email alerts need an email provider; neither is included.
+- Seller ratings: on each listing; 3+ ratings averaging 4 stars shows "Trusted seller".
+- Stream link: host adds a https link on the Fixtures page; players see "Watch live".
