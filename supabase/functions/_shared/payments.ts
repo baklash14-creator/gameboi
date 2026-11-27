@@ -1,6 +1,5 @@
 // Shared helpers for payment functions. Secrets live in Supabase, never in the website.
 import { createClient as sbClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { createClient as monimeClient } from "npm:monime-package"; // UNOFFICIAL SDK: pin a version and review it before going live
 
 export const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -13,8 +12,37 @@ export const json = (b: unknown, s = 200) =>
 export const admin = () => sbClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 export const configured = () =>
   !!(Deno.env.get("MONIME_SPACE_ID") && Deno.env.get("MONIME_ACCESS_TOKEN") && Deno.env.get("SITE_URL"));
-export const monime = () =>
-  monimeClient({ monimeSpaceId: Deno.env.get("MONIME_SPACE_ID")!, accessToken: Deno.env.get("MONIME_ACCESS_TOKEN")! });
+// Direct calls to the Monime REST API (no third-party SDK). Docs: docs.monime.io, version caph.2025-08-23.
+// Responses look like { success, messages, result }; we return { success, data } so callers stay simple.
+const MONIME_API = Deno.env.get("MONIME_API_URL") || "https://api.monime.io";
+async function call(method: string, path: string, body?: unknown) {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${Deno.env.get("MONIME_ACCESS_TOKEN")}`,
+    "Monime-Space-Id": Deno.env.get("MONIME_SPACE_ID")!,
+    "Monime-Version": "caph.2025-08-23",
+    "Content-Type": "application/json",
+  };
+  if (method === "POST") headers["Idempotency-Key"] = crypto.randomUUID();
+  try {
+    const res = await fetch(MONIME_API + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok || j.success === false) console.error("Monime error", res.status, JSON.stringify(j).slice(0, 300));
+    return { success: res.ok && j.success !== false, data: j.result ?? null };
+  } catch (e) {
+    console.error("Monime request failed", String(e));
+    return { success: false, data: null };
+  }
+}
+export const monime = () => ({
+  checkoutSession: {
+    create: (b: { name: string; amount: number; quantity: number; successUrl: string; cancelUrl: string; description: string }) =>
+      call("POST", "/v1/checkout-sessions", {
+        name: b.name, description: b.description, successUrl: b.successUrl, cancelUrl: b.cancelUrl,
+        lineItems: [{ name: b.name, quantity: b.quantity, price: { currency: "SLE", value: b.amount } }],
+      }),
+    retrieve: (id: string) => call("GET", `/v1/checkout-sessions/${encodeURIComponent(id)}`),
+  },
+});
 
 export async function userId(req: Request) {
   const token = (req.headers.get("Authorization") || "").replace("Bearer ", "");

@@ -6,7 +6,7 @@ const msg=(t)=>`<div class="msg" role="status">${esc(t)}</div>`;
 const money=(n,c)=>Number(n)?`${Number(n).toLocaleString()} ${esc(c)}`:"Free";
 const prize=(n,c)=>Number(n)?money(n,c):"None";
 const fd=f=>Object.fromEntries(new FormData(f));
-function nav(){const r=location.hash||"#/";const L=[["#/","Home"],["#/games","Games"],["#/tournaments","Tournaments"],["#/host","Host"],["#/market","Marketplace"],["#/leaderboard","Leaderboard"],["#/how","How It Works"]];
+function nav(){const r=location.hash||"#/";const L=[["#/","Home"],["#/games","Games"],["#/tournaments","Tournaments"],["#/host","Host"],["#/market","Marketplace"],["#/leaderboard","Leaderboard"],["#/clans","Clans"],["#/how","How It Works"]];
  if(isAdmin)L.push(["#/admin","Admin"]);L.push(user?["#/me","Dashboard"]:["#/login","Login"],user?["#/logout","Logout"]:["#/signup","Sign Up"]);
  $("#nav").innerHTML=L.map(([h,t])=>`<a href="${h}" class="${r===h?"on":""}">${t}</a>`).join("")}
 const needCfg=()=>`<div class="card"><h2>Setup needed</h2><p class="muted">Add your Supabase URL and anon key in <code>config.js</code>, then run <code>supabase_schema.sql</code>. See README.</p></div>`;
@@ -68,10 +68,10 @@ const gate=()=>`<div class="empty">Please <a href="#/login">log in</a> to contin
 const mwarn=()=>`<div class="warn"><b>Read before trading.</b> Selling accounts may break the game's terms of service and can lead to bans. GAME BOI does not guarantee ownership, transferability or recovery of any account and offers no escrow or buyer protection. Never share passwords, recovery or verification codes. Watch out for scammers: don't pay before you can verify, and be wary of pressure.</div>`;
 function tcards(d){return(d||[]).map(t=>`<a class="card" href="#/t/${t.id}"><h3>${esc(t.name)}</h3><p><span class="tag">${esc(t.games?.name||"")}</span><span class="tag">${esc(t.format)}</span><span class="tag">${esc(t.status)}</span></p><p class="muted">Starts ${new Date(t.start_at).toLocaleDateString()} · Fee ${money(t.entry_fee,t.currency)} · Prize ${prize(t.prize_pool,t.currency)}</p></a>`).join("")||`<div class="empty">No tournaments yet.</div>`}
 async function route(){nav();bnav();bell();if(!sb){app.innerHTML=hero()+needCfg();return}
- const h0=(location.hash||"#/").slice(1);document.body.classList.toggle("auth",!user||recovering);
+ const h0=(location.hash||"#/").slice(1);const pub=/^\/(info|how|games|tournaments|t|leaderboard|market|l|p|m|bracket|clans|clan)(\/|$)|^\/$/.test(h0);document.body.classList.toggle("auth",recovering||(!user&&!pub));
  if(user&&/^\/(login|signup|forgot)$/.test(h0)){location.hash="#/me";return}
  if(/^\/(login|signup|forgot)$/.test(h0)&&!user)authMode=h0.slice(1);
- if(recovering||(!user&&!/^\/(info|how)/.test(h0))){renderAuth();return}
+ if(recovering||(!user&&!pub)){renderAuth();return}
  const h=(location.hash||"#/").slice(1);const[,a,b]=h.match(/^(\/[^/]*)\/?(.*)$/)||[];
  if(h==="/logout"){await sb.auth.signOut();location.hash="#/";return}
  const key=(["/t","/l","/m","/info"].includes(a))?a:(a==="/tournaments"?"/tournaments":a||"/");

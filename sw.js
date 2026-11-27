@@ -1,4 +1,4 @@
-const V="gameboi-v17",SHELL=["./","index.html","styles.css","auth.css","design.css","anim.css","design3.css","anim2.css","fx2.js","fx.js","app.js","plus.js","plus.css","features.js","features.css","league.js","league.css","backend.js","config.js","manifest.json","icons/icon.svg"];
+const V="gameboi-v18",SHELL=["./","index.html","styles.css","auth.css","design.css","anim.css","design3.css","anim2.css","fx2.js","fx.js","app.js","plus.js","plus.css","features.js","features.css","league.js","league.css","v7.js","v7.css","backend.js","config.js","manifest.json","icons/icon.svg"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 // Network-first for our own files; never touches Supabase or other origins.

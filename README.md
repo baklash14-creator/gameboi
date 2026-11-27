@@ -16,11 +16,11 @@ Push to GitHub, import the repo in Vercel (or Netlify / GitHub Pages). No build 
 Supabase > Auth > Providers > Email: enable email + confirm email. For one-time codes, edit the **Magic Link** email template to include `{{ .Token }}`. Add your site URL under Auth > URL Configuration (also add it to Redirect URLs so password reset links work).
 
 ## Files
-index.html, styles.css, extra.css, auth.css, app.js, backend.js, config.js, manifest.json, sw.js, icons/, supabase_schema.sql, supabase_schema_v2.sql
+index.html, styles.css, auth.css, design*.css, anim*.css, app.js, plus.js, features.js, league.js, v7.js, fx*.js, backend.js, config.js, manifest.json, sw.js, icons/, supabase_schema*.sql (run v1 to v7 in order), supabase/functions
 
 ## Status
 Working: auth, tournaments, safe registration, fixtures (knockout with byes, league), score report/confirm/dispute, standings, leaderboard, marketplace (list/create/save/report), admin panel (reports, disputes, suspensions, audit log), legal pages (template text, get legal review).
-Not yet built: image upload UI, edit/pause/mark-sold listing UI, tournament edit UI, filters, email notifications, payments (off on purpose: verify a Sierra Leone provider first; no escrow or buyer protection is claimed).
+Built since: photo upload, edit/pause/mark-sold listings, tournament edit, search and filters, match chat, payouts tracking, ratings. Not built: email notifications and background push. Payments use Monime (see below); no escrow or buyer protection is claimed.
 
 ## Payments (Monime, optional)
 Run `supabase_schema_v3_payments.sql`. Deploy the three functions in `supabase/functions` (Supabase CLI: `supabase functions deploy create-checkout payment-verify` and `supabase functions deploy payment-webhook --no-verify-jwt`). Set secrets: `supabase secrets set MONIME_SPACE_ID=... MONIME_ACCESS_TOKEN=... SITE_URL=https://your-site WEBHOOK_SECRET=<long random>`. In Monime create a webhook pointing to the payment-webhook function URL with custom header `x-webhook-secret: <same secret>`. Test with a very small amount first. Until the secrets are set, paid tournaments show "Payments are not available".
@@ -51,3 +51,13 @@ Run `supabase_schema_v6_features.sql` once in Supabase > SQL Editor. It adds: ma
 - Phone alerts: browser notifications while the app is open or installed. True background push needs a push server (VAPID keys) and email alerts need an email provider; neither is included.
 - Seller ratings: on each listing; 3+ ratings averaging 4 stars shows "Trusted seller".
 - Stream link: host adds a https link on the Fixtures page; players see "Watch live".
+
+
+## Upgrade v7: fixes, public pages, ratings, clans, badges
+Run `supabase_schema_v7_elo_clans_badges.sql` once in Supabase > SQL Editor (safe to re-run). Tested on a local Postgres with 30 checks.
+- **Public browsing**: visitors can see the home page, games, tournaments, leaderboard, marketplace, brackets, clans and player profiles without logging in. Registering, selling, hosting and the dashboard still need an account.
+- **Bracket page** (`#/bracket/<tournament id>`): visual knockout bracket, updates every 15 seconds, champion banner, share link. Button on every tournament page.
+- **Rating (ELO)**: every player starts at 1000; each verified match changes it (K=32; a win over a higher-rated player gains more). Shown on the Leaderboard page, profiles and clans. Players cannot edit their own rating.
+- **Clans**: create, join (max 30), leave, owner can remove members. Ranked by average rating. One clan per player.
+- **Daily check-in and badges**: streaks on the dashboard; badges for first win, 10 matches, tournament champion, 3/7/30-day streaks, clan founder and member.
+- **Fixes**: a league can now be finished (the host button was missing and the database refused); a knockout dispute can no longer be resolved as a draw; the Monime payment functions now call Monime's REST API directly instead of an unofficial npm package (response shape and status words checked against docs.monime.io). The amount is still sent in minor units (fee x 100); check with a very small paid test before going live.

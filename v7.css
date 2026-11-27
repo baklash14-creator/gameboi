@@ -1,0 +1,16 @@
+.bk-scroll{overflow-x:auto;padding-bottom:12px}
+.bk{display:flex;gap:28px;min-width:max-content;align-items:stretch}
+.bk-col{display:flex;flex-direction:column;justify-content:space-around;gap:14px;min-width:210px}
+.bk-col h3{margin:0 0 4px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.bk-m{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.04);overflow:visible}
+.bk-m:not(:only-child)::after{content:"";position:absolute;right:-15px;top:50%;width:14px;border-top:2px solid rgba(255,255,255,.2)}
+.bk-col:last-child .bk-m::after{display:none}
+.bk-m.s-disputed{border-color:#f5a623}.bk-m.s-reported{border-color:#4aa3ff}
+.bk-p{display:flex;justify-content:space-between;gap:10px;padding:9px 12px}
+.bk-p+.bk-p{border-top:1px solid rgba(255,255,255,.1)}
+.bk-p.win{font-weight:700;color:#39ff14}.bk-p.lose{opacity:.55}
+.bk-champ{margin:12px 0;padding:14px;border-radius:12px;background:rgba(57,255,20,.1);border:1px solid rgba(57,255,20,.4);text-align:center;font-size:1.1rem}
+.v7b span{display:inline-block;margin:0 6px 6px 0;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.08);font-size:13px}
+.v7c{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.v7n{font-size:1.6rem}
+.v7p .row{display:flex;justify-content:space-between;padding:4px 0}
+@media(max-width:600px){.bk-col{min-width:180px}}

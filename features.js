@@ -98,7 +98,6 @@
 
   /* ---------- player profile ---------- */
   views["/p"] = async id => {
-    if (!user) return gate();
     const [{ data: p }, st, ss, rm] = await Promise.all([
       sb.from("profiles").select("id,username,avatar_url,created_at").eq("id", id).single(),
       sb.rpc("player_stats", { p: id }),
