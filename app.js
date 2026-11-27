@@ -221,7 +221,11 @@ function payModal(id,d){const o=document.createElement("div");o.className="modal
  q("#pc").onchange=e=>q("#pgo").disabled=!e.target.checked;q("#pno").onclick=()=>o.remove();o.onclick=e=>{if(e.target===o)o.remove()};
  q("#pgo").onclick=async()=>{const b=q("#pgo");b.disabled=true;b.textContent="Opening Monime…";
   const{data,error}=await sb.functions.invoke("create-checkout",{body:{tournament_id:id}});
-  if(error||!data?.url){b.textContent="Pay "+money(d.fee,d.cur);b.disabled=false;q("#pout").innerHTML=msg(data?.error||"Payments are not available right now. Please try again later.");return}
+  if(error||!data?.url){b.textContent="Pay "+money(d.fee,d.cur);b.disabled=false;
+   let why=data?.error||"",st=error?.context?.status;
+   if(!why&&error?.context?.json){try{why=(await error.context.clone().json()).error||""}catch(e){}}
+   if(!why)why=st===404?"The payment service is not set up on the server yet (the create-checkout function is not deployed).":st===401?"Please log in again, then retry.":"Payments are not available right now. Please try again later.";
+   q("#pout").innerHTML=msg(why+(st?" (code "+st+")":""));return}
   location.href=data.url}}
 views["/payments"]=async()=>{if(!user)return gate();const{data,error}=await sb.from("payments").select("*,tournaments(name)").eq("user_id",user.id).order("created_at",{ascending:false}).limit(50);const d=data||[];
  return`<h1>My payments</h1>${error?msg(error.message):""}${d.map(p=>`<div class="card note"><span><b>${esc(p.tournaments?.name||p.purpose)}</b><br><span class="muted sm">${new Date(p.created_at).toLocaleString()}${p.provider_order?" · Order "+esc(p.provider_order):""}${p.note?" · "+esc(p.note):""}</span></span><span style="text-align:right"><b>${money(p.amount,p.currency)}</b><br><span class="pill s-${p.status==="successful"?"open":p.status==="pending"?"":"live"}">${esc(p.status)}</span>${p.status==="pending"?' <a href="#/pay">Check</a>':""}</span></div>`).join("")||`<div class="empty">No payments yet.</div>`}`};
