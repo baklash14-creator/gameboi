@@ -133,7 +133,7 @@
   const oL = views["/l"];
   views["/l"] = async id => {
     const h = await oL(id);
-    const { data: l } = await sb.from("listings").select("seller_id,profiles(username)").eq("id", id).single();
+    const { data: l } = await sb.from("listings").select("seller_id,profiles:profiles!listings_seller_id_fkey(username)").eq("id", id).single();
     if (!l) return h;
     const [ss, rv] = await Promise.all([
       sb.from("seller_stats").select("*").eq("seller_id", l.seller_id).maybeSingle(),

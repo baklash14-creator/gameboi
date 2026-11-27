@@ -14,3 +14,22 @@
 .v7c{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.v7n{font-size:1.6rem}
 .v7p .row{display:flex;justify-content:space-between;padding:4px 0}
 @media(max-width:600px){.bk-col{min-width:180px}}
+
+/* ---- tidy top navigation ---- */
+header .bar{justify-content:space-between;row-gap:6px}
+header nav{margin:0;flex:1 1 auto;justify-content:flex-end;gap:4px}
+header nav a{white-space:nowrap}
+#bell{order:2}
+@media(max-width:1020px){
+  header nav{order:3;flex:1 1 100%;justify-content:center;padding:6px 0 2px;border-top:1px solid #1b2a5566}
+  header nav{gap:2px}
+  header nav a{padding:6px 9px;font-size:13.5px}
+}
+@media(max-width:860px){header nav a{padding:6px 7px;font-size:13px}}
+/* visitors who are not logged in have no bottom bar, so keep the top tabs on phones as one swipeable row */
+@media(max-width:700px){
+  body:not(.in) header nav{display:flex;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  body:not(.in) header nav::-webkit-scrollbar{display:none}
+  body:not(.in) header nav a{flex:0 0 auto}
+  body:not(.in) main{padding-bottom:20px}
+}
