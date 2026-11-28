@@ -16,7 +16,7 @@ Push to GitHub, import the repo in Vercel (or Netlify / GitHub Pages). No build 
 Supabase > Auth > Providers > Email: enable email + confirm email. For one-time codes, edit the **Magic Link** email template to include `{{ .Token }}`. Add your site URL under Auth > URL Configuration (also add it to Redirect URLs so password reset links work).
 
 ## Files
-index.html, styles.css, auth.css, design*.css, anim*.css, app.js, plus.js, features.js, league.js, v7.js, fx*.js, backend.js, config.js, manifest.json, sw.js, icons/, supabase_schema*.sql (run v1 to v7 in order), supabase/functions
+index.html, styles.css, auth.css, design*.css, anim*.css, admin.css, app.js, plus.js, features.js, league.js, v7.js, v8.js, admin.js, fx*.js, backend.js, config.js, manifest.json, sw.js, icons/, supabase_schema*.sql (run v1 to v7, then v9, in order), supabase/functions
 
 ## Status
 Working: auth, tournaments, safe registration, fixtures (knockout with byes, league), score report/confirm/dispute, standings, leaderboard, marketplace (list/create/save/report), admin panel (reports, disputes, suspensions, audit log), legal pages (template text, get legal review).
@@ -63,3 +63,13 @@ Run `supabase_schema_v7_elo_clans_badges.sql` once in Supabase > SQL Editor (saf
 - **Clans**: create, join (max 30), leave, owner can remove members. Ranked by average rating. One clan per player.
 - **Daily check-in and badges**: streaks on the dashboard; badges for first win, 10 matches, tournament champion, 3/7/30-day streaks, clan founder and member.
 - **Fixes**: a league can now be finished (the host button was missing and the database refused); a knockout dispute can no longer be resolved as a draw; the Monime payment functions now call Monime's REST API directly instead of an unofficial npm package (response shape and status words checked against docs.monime.io). The amount is still sent in minor units (fee x 100); check with a very small paid test before going live.
+
+## Upgrade v9: admin dashboard and refunds
+Run `supabase_schema_v9_admin.sql` once in Supabase > SQL Editor (safe to re-run). Until you do, the new admin tabs show a setup note and everything else works as before. Log in as an admin and open **Admin**.
+- **Overview**: paid entry fees (all time and 30 days), refunded total, players, open tournaments, a 14-day chart, and a "needs your attention" list.
+- **Payments**: every payment with search, filters (paid, pending, failed, refunded, needs refund), a Refund button, and Download CSV.
+- **Refunds**: players ask for a refund on **My payments**. Admin approves or declines (with a note the player sees), sends the money back, then records the transaction reference with **Mark as refunded**. The payment then shows as refunded and the player's tournament place is cancelled (only while the tournament is not live).
+- **Tournaments**: **Cancel & refund** tells every player and starts a refund for everyone who paid. Payments flagged "Tournament full: refund needed" show on the Payments tab with a Refund button.
+- **Users**: search, suspend or restore, and send one player a message. **Messages**: one notice to all players. **Reports**: listing reports and disputed matches. **Activity**: log of admin actions.
+- **No money moves automatically.** Refunds are sent by you from the Monime dashboard (find the payment by its order number) or by mobile money, then recorded here. Admin rights are still given only in the SQL editor.
+- New files: `admin.js`, `admin.css`, `supabase_schema_v9_admin.sql`. The offline cache version in `sw.js` is now v22.

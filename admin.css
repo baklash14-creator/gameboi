@@ -1,0 +1,31 @@
+/* ===== v9: admin dashboard ===== */
+.adm-tabs{display:flex;gap:6px;overflow-x:auto;margin:10px 0 18px;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.adm-tabs::-webkit-scrollbar{display:none}
+.adm-tabs a{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;color:#c4d0ea;background:#0a1530;border:1px solid var(--line,#1b2a55);transition:background .2s,color .2s}
+.adm-tabs a:hover{color:#fff;background:#12306e}
+.adm-tabs a.on{color:#04110a;background:linear-gradient(135deg,#39ff14,#9bff7a);border-color:transparent}
+.adm-tabs a b{background:#ff4d4d;color:#fff;border-radius:999px;font-size:11px;line-height:1;padding:3px 7px}
+
+.adm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.adm-tile{display:block;color:var(--text,#fff);font-size:13px;color:var(--mut,#9fb0d0)}
+.adm-tile b{display:block;font-size:22px;line-height:1.2;margin-bottom:4px;color:var(--text,#fff);overflow-wrap:anywhere}
+.adm-todo{margin:6px 0 0;padding-left:18px}.adm-todo li{margin:6px 0}.adm-todo a b{color:#ffb4b4}
+
+.adm-chart{width:100%;height:auto;display:block;margin:8px 0}
+.adm-chart rect{fill:var(--green,#39ff14)}.adm-chart rect:hover{fill:#9bff7a}
+.adm-chart text{fill:var(--mut,#9fb0d0);font-size:11px}
+
+.adm-sum{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 12px;color:var(--mut,#9fb0d0);font-size:14px}.adm-sum b{color:var(--text,#fff)}
+.adm-filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
+.adm-filters input{flex:1 1 200px;min-width:0;max-width:340px}
+.chipbtn{background:#0a1530;color:#c4d0ea;border:1px solid var(--line,#1b2a55);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.chipbtn.on{color:#04110a;background:var(--green,#39ff14);border-color:transparent}
+tr[hidden]{display:none}
+.adm-det{max-width:360px;overflow-wrap:anywhere}
+.tag.s-disputed{background:#6b1717;color:#ffc4c4}
+
+.adm-r .row{align-items:flex-start;margin:0}.adm-r{margin:8px 0}
+.adm-r .row>span:last-child{display:flex;flex-wrap:wrap;gap:4px}
+.adm-search{display:flex;gap:8px;margin:0 0 12px}.adm-search input{flex:1;min-width:0;max-width:340px}
+.adm-u{margin:8px 0}
+@media(max-width:600px){.adm-tile b{font-size:19px}.adm-filters input{max-width:none}}
