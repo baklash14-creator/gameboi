@@ -1,0 +1,70 @@
+/* ===== v8: nicer tabs, friendlier pages, payment popup ===== */
+
+/* ---- top tabs ---- */
+header nav{gap:4px;background:#0a1530b3;border:1px solid var(--line);border-radius:999px;padding:4px}
+header nav a{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:13.5px;font-weight:600;color:#c4d0ea;transition:background .2s,color .2s,transform .15s}
+header nav a svg{width:16px;height:16px;flex:none;opacity:.85}
+header nav a:hover{color:#fff;background:#ffffff12}
+header nav a:active{transform:scale(.96)}
+header nav a.on{color:#04110a;background:linear-gradient(135deg,#39ff14,#9bff7a);box-shadow:0 4px 16px #39ff1446}
+header nav a.on svg{opacity:1}
+header nav a.join{color:var(--green);background:#39ff1418;box-shadow:inset 0 0 0 1px #39ff1466}
+header nav a.join:hover{background:#39ff1430}
+header nav a.join.on{color:#04110a;background:linear-gradient(135deg,#39ff14,#9bff7a)}
+@media(max-width:1020px){
+  header nav{order:3;flex:1 1 100%;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-radius:16px;padding:4px}
+  header nav::-webkit-scrollbar{display:none}
+  header nav a{flex:0 0 auto;padding:8px 12px}
+}
+
+/* ---- bottom tabs (phones, logged in) ---- */
+#bnav{gap:4px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#060b1af5}
+#bnav a{font-weight:600;font-size:11px;padding:8px 0;min-height:52px;border-radius:16px;transition:background .2s,color .2s,transform .15s}
+#bnav a svg{width:24px;height:24px;transition:transform .2s}
+#bnav a:active{transform:scale(.94)}
+#bnav a.on{color:#04110a;background:linear-gradient(135deg,#39ff14,#9bff7a);box-shadow:0 4px 14px #39ff1440}
+#bnav a.on svg{transform:translateY(-1px) scale(1.08)}
+
+/* ---- friendly helper text ---- */
+.help{color:var(--mut);margin:-4px 0 16px;font-size:15px;line-height:1.55;max-width:62ch}
+.howjoin{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#0b1634;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:14px 0}
+.howjoin>b{flex:1 1 100%;font-size:14px}
+.howjoin span{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#d3def5}
+.howjoin i{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;color:#04110a;background:var(--green)}
+
+/* ---- payment popup ---- */
+.sheet.pay{max-height:92vh;overflow:auto;-webkit-overflow-scrolling:touch}
+.payhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.payhead small{display:block;color:var(--mut);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.payhead h2{margin:2px 0 0;font-size:20px;line-height:1.25}
+.payhead .x{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#08122a;color:#c4d0ea;font-size:15px;cursor:pointer}
+.payhead .x:hover{color:#fff;border-color:#39ff1466}
+.payprice{display:flex;justify-content:space-between;align-items:center;background:#08122a;border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.payprice span{color:#9fb0d0}.payprice b{color:var(--green);font-size:22px}
+.paystep{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-weight:700;font-size:14px}
+.paystep i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;color:#04110a;background:var(--green)}
+.svcs{display:grid;gap:8px;margin-bottom:6px}
+.svc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#08122a;color:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.svc:hover{border-color:color-mix(in srgb,var(--c) 60%,transparent)}
+.svc:active{transform:scale(.99)}
+.svc .dot{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #4a5f8f;display:grid;place-items:center;transition:.2s}
+.svc .st{display:grid;gap:2px}.svc .st b{font-size:15px}.svc .st small{color:#9fb0d0;font-size:12.5px}
+.svc.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 14%,#08122a)}
+.svc.on .dot{border-color:var(--c);background:radial-gradient(circle,var(--c) 0 45%,transparent 50%)}
+.ussd{margin:10px 0;border-radius:16px;padding:18px 12px;text-align:center;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 22%,#08122a),#08122a);border:2px dashed var(--c)}
+.ussd code{display:block;font-size:clamp(24px,8vw,34px);font-weight:800;letter-spacing:.04em;color:#fff;word-break:break-all;user-select:all}
+.ussdbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ussdbtns .btn{text-align:center}
+.steps2{margin:0 0 12px;padding-left:20px;display:grid;gap:6px;font-size:14px;color:#d3def5}
+.wait{display:flex;align-items:center;gap:10px;background:#0b1634;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:13.5px}
+.spin{flex:none;width:18px;height:18px;border-radius:50%;border:3px solid #39ff1433;border-top-color:var(--green);animation:v8spin .9s linear infinite}
+@keyframes v8spin{to{transform:rotate(360deg)}}
+.ok{text-align:center;padding:8px 0}
+.ok h2{margin:10px 0 6px}
+.ok svg{width:84px;height:84px;fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ok svg circle{stroke-dasharray:152;stroke-dashoffset:152;animation:v8draw .6s ease forwards}
+.ok svg path{stroke-dasharray:40;stroke-dashoffset:40;animation:v8draw .4s .45s ease forwards}
+@keyframes v8draw{to{stroke-dashoffset:0}}
+.ok .btn{margin-top:8px}
+.ok.bad h2{color:#ffb454}
+@media(prefers-reduced-motion:reduce){.spin,.ok svg circle,.ok svg path{animation-duration:.01s}}

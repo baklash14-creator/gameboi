@@ -6,9 +6,13 @@ const msg=(t)=>`<div class="msg" role="status">${esc(t)}</div>`;
 const money=(n,c)=>Number(n)?`${Number(n).toLocaleString()} ${esc(c)}`:"Free";
 const prize=(n,c)=>Number(n)?money(n,c):"None";
 const fd=f=>Object.fromEntries(new FormData(f));
-function nav(){const r=location.hash||"#/";const L=[["#/","Home"],["#/games","Games"],["#/tournaments","Tournaments"],["#/host","Host"],["#/market","Marketplace"],["#/leaderboard","Leaderboard"],["#/clans","Clans"],["#/how","How It Works"]];
- if(isAdmin)L.push(["#/admin","Admin"]);L.push(user?["#/me","Dashboard"]:["#/login","Login"],user?["#/logout","Logout"]:["#/signup","Sign Up"]);
- $("#nav").innerHTML=L.map(([h,t])=>`<a href="${h}" class="${r===h?"on":""}">${t}</a>`).join("")}
+const TABI={"#/":"M3 11l9-8 9 8v10h-6v-6H9v6H3z","#/games":"M6 11h4M8 9v4M15 12h.01M18 10h.01M17.3 5H6.7a4 4 0 0 0-3.9 3.2l-1.3 6A3 3 0 0 0 4.4 18c.9 0 1.7-.5 2.1-1.2L7.6 15h8.8l1.1 1.8c.4.7 1.2 1.2 2.1 1.2a3 3 0 0 0 2.9-3.8l-1.3-6A4 4 0 0 0 17.3 5z","#/tournaments":"M7 4h10v4a5 5 0 0 1-10 0zM5 5H3v2a3 3 0 0 0 3 3M19 5h2v2a3 3 0 0 1-3 3M12 13v4M8 21h8","#/host":"M12 5v14M5 12h14","#/market":"M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0","#/leaderboard":"M6 20V10M12 20V4M18 20v-7","#/clans":"M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8","#/how":"M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01","#/admin":"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z","#/me":"M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0","#/login":"M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3","#/signup":"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM19 8v6M22 11h-6","#/logout":"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
+const tabIco=h=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${TABI[h]||""}"/></svg>`;
+const TABGRP={"#/t":"#/tournaments","#/m":"#/tournaments","#/l":"#/market","#/sell":"#/market","#/pay":"#/me","#/payments":"#/me","#/notifications":"#/me","#/saved":"#/me"};
+function curTab(){const s=(location.hash||"#/").replace(/^#\/?/,"").split("?")[0].split("/")[0];const k=s?"#/"+s:"#/";return TABGRP[k]||k}
+function nav(){const r=curTab();const L=[["#/","Home"],["#/games","Games"],["#/tournaments","Tournaments"],["#/host","Host"],["#/market","Buy & Sell"],["#/leaderboard","Rankings"],["#/clans","Clans"],["#/how","How it works"]];
+ if(isAdmin)L.push(["#/admin","Admin"]);L.push(user?["#/me","My account"]:["#/login","Log in"],user?["#/logout","Log out"]:["#/signup","Join free"]);
+ $("#nav").innerHTML=L.map(([h,t])=>`<a href="${h}" class="${r===h?"on":""}${h==="#/signup"?" join":""}"${r===h?' aria-current="page"':""}>${tabIco(h)}<span>${esc(t)}</span></a>`).join("")}
 const needCfg=()=>`<div class="card"><h2>Setup needed</h2><p class="muted">Add your Supabase URL and anon key in <code>config.js</code>, then run <code>supabase_schema.sql</code>. See README.</p></div>`;
 async function count(t,f){let q=sb.from(t).select("*",{count:"exact",head:true});if(f)q=f(q);const{count:n}=await q;return n??0}
 const views={
@@ -178,9 +182,9 @@ if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWor
 
 /* ---------- Real design layer ---------- */
 const gh=n=>{n=(n||"").toLowerCase();return n.includes("efootball")?140:n.includes("call")?24:n.includes("fortnite")?268:/fc|ea sports/.test(n)?205:170};
-const ICON={"#/":"M3 11l9-8 9 8v10h-6v-6H9v6H3z","#/tournaments":"M7 4h10v4a5 5 0 0 1-10 0zM5 5H3v2a3 3 0 0 0 3 3M19 5h2v2a3 3 0 0 1-3 3M12 13v4M8 21h8","#/host":"M12 5v14M5 12h14","#/market":"M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0","#/me":"M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"};
-function bnav(){const e=$("#bnav");if(!e)return;if(!user||recovering){e.innerHTML="";return}const r=location.hash||"#/";
- e.innerHTML=[["#/","Home"],["#/tournaments","Play"],["#/host","Host"],["#/market","Market"],["#/me","Me"]].map(([h,t])=>`<a href="${h}" class="${r===h?"on":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICON[h]}"/></svg>${t}</a>`).join("")}
+const ICON=TABI;
+function bnav(){const e=$("#bnav");if(!e)return;if(!user||recovering){e.innerHTML="";return}const r=curTab();
+ e.innerHTML=[["#/","Home"],["#/tournaments","Play"],["#/host","Host"],["#/market","Market"],["#/me","Me"]].map(([h,t])=>`<a href="${h}" class="${r===h?"on":""}"${r===h?' aria-current="page"':""}>${tabIco(h)}<span>${t}</span></a>`).join("")}
 function countUp(){document.querySelectorAll("[data-n]").forEach(e=>{const n=+e.dataset.n;if(!n){e.textContent="0";return}let i=0;const s=Math.max(1,Math.ceil(n/30));const id=setInterval(()=>{i=Math.min(n,i+s);e.textContent=i.toLocaleString();if(i>=n)clearInterval(id)},25)})}
 function tcards(d){return(d||[]).map(t=>{const n=t.participants?.[0]?.count??null,pct=n===null?0:Math.min(100,Math.round(n/t.max_participants*100));
  return`<a class="card tc" style="--h:${gh(t.games?.name)}" href="#/t/${t.id}"><div class="tc-top"><span class="tc-game">${esc(t.games?.name||"")}</span><span class="pill s-${esc(t.status)}">${esc(t.status)}</span></div><h3>${esc(t.name)}</h3><p class="muted">${esc(t.format)} · ${new Date(t.start_at).toLocaleDateString()}</p><div class="tc-meta"><span>Entry <b>${money(t.entry_fee,t.currency)}</b></span><span>Prize <b>${prize(t.prize_pool,t.currency)}</b></span></div>${n===null?"":`<div class="bar2"><i style="width:${pct}%"></i></div><p class="muted sm">${n}/${t.max_participants} players</p>`}</a>`}).join("")||`<div class="empty">No tournaments yet.</div>`}
@@ -215,18 +219,56 @@ let cdT;function startCd(){clearInterval(cdT);const e=$("#cd");if(!e)return;cons
   e.innerHTML=`Registration closes in <b>${Math.floor(s/86400)}d ${Math.floor(s%86400/3600)}h ${Math.floor(s%3600/60)}m ${s%60}s</b>`};f();cdT=setInterval(f,1000)}
 
 /* ---------- Monime payment structure ---------- */
-function payModal(id,d){const o=document.createElement("div");o.className="modal";
- o.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="Confirm payment"><h2>Confirm payment</h2><div class="sum"><div><span>Tournament</span><b>${esc(d.name)}</b></div><div><span>Entry fee</span><b>${money(d.fee,d.cur)}</b></div><div><span>Service fee</span><b>None</b></div><div class="tot"><span>Total</span><b>${money(d.fee,d.cur)}</b></div><div><span>Pay with</span><b>Mobile money (Monime)</b></div></div><label class="chk"><input type="checkbox" id="pc"> I understand the fee is paid to GAME BOI, there is no escrow or buyer protection, and refunds follow the tournament rules.</label><button class="btn wide" id="pgo" disabled>Pay ${money(d.fee,d.cur)}</button><button class="btn alt wide" id="pno">Cancel</button><div id="pout"></div></div>`;
- document.body.appendChild(o);const q=s=>o.querySelector(s);
- q("#pc").onchange=e=>q("#pgo").disabled=!e.target.checked;q("#pno").onclick=()=>o.remove();o.onclick=e=>{if(e.target===o)o.remove()};
- q("#pgo").onclick=async()=>{const b=q("#pgo");b.disabled=true;b.textContent="Opening Monime…";
-  const{data,error}=await sb.functions.invoke("create-checkout",{body:{tournament_id:id}});
-  if(error||!data?.url){b.textContent="Pay "+money(d.fee,d.cur);b.disabled=false;
-   let why=data?.error||"",st=error?.context?.status;
-   if(!why&&error?.context?.json){try{why=(await error.context.clone().json()).error||""}catch(e){}}
-   if(!why)why=st===404?"The payment service is not set up on the server yet (the create-checkout function is not deployed).":st===401?"Please log in again, then retry.":"Payments are not available right now. Please try again later.";
-   q("#pout").innerHTML=msg(why+(st?" (code "+st+")":""));return}
-  location.href=data.url}}
+/* ---------- Payment popup: choose Orange Money / Afrimoney, then dial a USSD code ---------- */
+const fnErr=async(e,fb)=>{const st=e?.context?.status;try{const j=await e?.context?.clone?.().json?.();if(j?.error)return j.error+(st>=500?" (code "+st+")":"")}catch(_){}
+ return st===404?"The payment service is not set up on the server yet (the payment function is not deployed). (code 404)":st===401?"Please log in again, then retry.":(fb||"Something went wrong. Please try again.")+(st?" (code "+st+")":"")};
+const SVC=[{id:"m17",name:"Orange Money",sub:"Approve with your Orange Money PIN",c:"#ff7900"},{id:"m18",name:"Afrimoney",sub:"Approve with your Afrimoney PIN",c:"#e8112d"},{id:"card",name:"Card or bank",sub:"Opens Monime's secure payment page",c:"#3b82f6"}];
+function payModal(id,d){
+ const o=document.createElement("div");o.className="modal";o.innerHTML='<div class="sheet pay" role="dialog" aria-modal="true" aria-label="Pay your entry fee"></div>';
+ document.body.appendChild(o);
+ let poll=0,tick=0,pick=null,busy=false;const sh=o.firstChild,q=s=>o.querySelector(s);
+ const stop=()=>{clearInterval(poll);clearInterval(tick);poll=tick=0};
+ const close=()=>{stop();o.remove()};
+ o.onclick=e=>{if(e.target===o&&!busy)close()};
+ const head=(small,title)=>`<div class="payhead"><div><small>${small}</small><h2>${title}</h2></div><button type="button" class="x" id="px" aria-label="Close">&#10005;</button></div>`;
+ const wireClose=()=>{const x=q("#px");if(x)x.onclick=close};
+ function choose(){stop();pick=null;
+  sh.innerHTML=head("Join tournament",esc(d.name))+`<div class="payprice"><span>Entry fee</span><b>${money(d.fee,d.cur)}</b></div>
+  <p class="paystep"><i>1</i>Choose how you want to pay</p>
+  <div class="svcs" role="radiogroup" aria-label="Payment method">${SVC.map(s=>`<button type="button" class="svc" role="radio" aria-checked="false" data-s="${s.id}" style="--c:${s.c}"><span class="dot"></span><span class="st"><b>${s.name}</b><small>${s.sub}</small></span></button>`).join("")}</div>
+  <label class="chk"><input type="checkbox" id="pc"> I understand this fee is paid to GAME BOI, there is no escrow or buyer protection, and refunds follow the tournament rules.</label>
+  <button type="button" class="btn wide" id="pgo" disabled>Choose a payment method</button><div id="pout"></div>`;
+  wireClose();
+  const go=q("#pgo"),pc=q("#pc");
+  const refresh=()=>{go.disabled=!(pick&&pc.checked)||busy;go.textContent=!pick?"Choose a payment method":!pc.checked?"Tick the box to continue":pick==="card"?"Continue to Monime":"Get my dial code"};
+  o.querySelectorAll(".svc").forEach(b=>b.onclick=()=>{pick=b.dataset.s;o.querySelectorAll(".svc").forEach(x=>{const on=x===b;x.classList.toggle("on",on);x.setAttribute("aria-checked",on)});refresh()});
+  pc.onchange=refresh;
+  go.onclick=async()=>{busy=true;go.disabled=true;go.textContent="One moment…";q("#pout").innerHTML="";
+   const card=pick==="card";
+   const{data,error}=await sb.functions.invoke(card?"create-checkout":"create-ussd",{body:card?{tournament_id:id}:{tournament_id:id,provider:pick}});
+   busy=false;
+   if(error||!(card?data?.url:data?.ussd)){refresh();q("#pout").innerHTML=msg(await fnErr(error,"Payments are not available right now. Please try again later."));return}
+   if(card){location.href=data.url;return}
+   dial(data)}}
+ function dial(u){const s=SVC.find(x=>x.id===pick);const end=u.expires_at?new Date(u.expires_at).getTime():Date.now()+15*6e4;
+  sh.innerHTML=head(`Step 2 of 2 &middot; ${s.name}`,"Dial to pay")+`<p class="muted">On the phone that has your ${s.name} account, dial this code:</p>
+  <div class="ussd" style="--c:${s.c}"><code id="uc">${esc(u.ussd)}</code></div>
+  <div class="ussdbtns"><a class="btn" href="tel:${encodeURIComponent(u.ussd)}">Dial now</a><button type="button" class="btn alt" id="ucopy">Copy code</button></div>
+  <ol class="steps2"><li>Dial the code above.</li><li>Check that the amount is <b>${money(d.fee,d.cur)}</b>.</li><li>Enter your ${s.name} PIN to approve.</li></ol>
+  <div class="wait" aria-live="polite"><i class="spin"></i><span>Waiting for your payment. This page updates by itself.</span></div>
+  <p class="muted sm">Code expires in <b id="left">--:--</b></p><button type="button" class="btn alt wide" id="pback">Choose another way to pay</button>`;
+  wireClose();q("#pback").onclick=choose;
+  q("#ucopy").onclick=async e=>{try{await navigator.clipboard.writeText(u.ussd);e.target.textContent="Copied!"}catch(_){e.target.textContent="Press and hold the code to copy"}};
+  const look=async()=>{const{data}=await sb.functions.invoke("payment-verify");const p=(data?.payments||[]).find(x=>x.id===u.payment_id);return p?p.status:null};
+  const react=st=>{if(st==="successful"){stop();paid()}else if(st==="failed"){stop();lost()}};
+  poll=setInterval(async()=>{if(document.hidden||!poll)return;react(await look())},4000);
+  tick=setInterval(async()=>{const t=Math.max(0,Math.round((end-Date.now())/1000));const l=q("#left");if(l)l.textContent=`${Math.floor(t/60)}:${String(t%60).padStart(2,"0")}`;if(!t){stop();const st=await look();if(st==="successful")paid();else lost()}},1000)}
+ function paid(){sh.innerHTML=`<div class="ok"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg><h2>Payment received!</h2><p class="muted">You are registered for <b>${esc(d.name)}</b>. Good luck!</p><button type="button" class="btn wide" id="pdone">Done</button></div>`;
+  if(window.GBfx){try{GBfx.confetti();GBfx.toast("You're in!")}catch(_){}}
+  q("#pdone").onclick=()=>{close();route()}}
+ function lost(){sh.innerHTML=`<div class="ok bad"><h2>This payment did not go through</h2><p class="muted">The code expired or was cancelled, and you are not registered yet. If you already approved it on your phone, wait a minute and check <a href="#/payments">My payments</a>.</p><button type="button" class="btn wide" id="again">Try again</button><button type="button" class="btn alt wide" id="pshut">Close</button></div>`;
+  q("#again").onclick=choose;q("#pshut").onclick=close;q(".ok a").onclick=close}
+ choose()}
 views["/payments"]=async()=>{if(!user)return gate();const{data,error}=await sb.from("payments").select("*,tournaments(name)").eq("user_id",user.id).order("created_at",{ascending:false}).limit(50);const d=data||[];
  return`<h1>My payments</h1>${error?msg(error.message):""}${d.map(p=>`<div class="card note"><span><b>${esc(p.tournaments?.name||p.purpose)}</b><br><span class="muted sm">${new Date(p.created_at).toLocaleString()}${p.provider_order?" · Order "+esc(p.provider_order):""}${p.note?" · "+esc(p.note):""}</span></span><span style="text-align:right"><b>${money(p.amount,p.currency)}</b><br><span class="pill s-${p.status==="successful"?"open":p.status==="pending"?"":"live"}">${esc(p.status)}</span>${p.status==="pending"?' <a href="#/pay">Check</a>':""}</span></div>`).join("")||`<div class="empty">No payments yet.</div>`}`};
 const oM=views["/m"];views["/m"]=async id=>{const h=await oM(id);const{data:t}=await sb.from("tournaments").select("host_id,currency").eq("id",id).single();if(!t||!user||t.host_id!==user.id)return h;

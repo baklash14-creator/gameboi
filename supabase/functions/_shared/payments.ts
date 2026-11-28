@@ -42,6 +42,15 @@ export const monime = () => ({
       }),
     retrieve: (id: string) => call("GET", `/v1/checkout-sessions/${encodeURIComponent(id)}`),
   },
+  // USSD payment codes: the player dials the code on their phone and approves with their PIN.
+  paymentCode: {
+    create: (b: { name: string; amount: number; provider: string; reference: string; duration: string }) =>
+      call("POST", "/v1/payment-codes", {
+        name: b.name, mode: "one_time", enable: true, duration: b.duration, reference: b.reference,
+        amount: { currency: "SLE", value: b.amount }, authorizedProviders: [b.provider],
+      }),
+    retrieve: (id: string) => call("GET", `/v1/payment-codes/${encodeURIComponent(id)}`),
+  },
 });
 
 export async function userId(req: Request) {
@@ -57,13 +66,18 @@ const DEAD = ["expired", "failed", "cancelled", "canceled"];
 // Never trust the browser or the webhook body: ask Monime directly for the session status.
 export async function verify(row: any): Promise<string> {
   if (!row.provider_session_id) return row.status;
-  const r = await monime().checkoutSession.retrieve(row.provider_session_id);
+  const isCode = String(row.provider_session_id).startsWith("pmc-");
+  const r = isCode
+    ? await monime().paymentCode.retrieve(row.provider_session_id)
+    : await monime().checkoutSession.retrieve(row.provider_session_id);
   if (!r.success) return row.status;
   const st = String(r.data?.status ?? "").toLowerCase();
   const sb = admin();
   if (PAID.includes(st)) {
     const li: any = r.data?.lineItems?.data?.[0];
-    const paidMinor = li ? Number(li.price?.value) * Number(li.quantity ?? 1) : null;
+    const paidMinor = isCode
+      ? (r.data?.amount?.value != null ? Number(r.data.amount.value) : null)
+      : (li ? Number(li.price?.value) * Number(li.quantity ?? 1) : null);
     if (paidMinor !== null && paidMinor !== Math.round(Number(row.amount) * 100)) {
       await sb.from("payments").update({ note: "Amount mismatch: review manually" }).eq("id", row.id);
       return row.status;

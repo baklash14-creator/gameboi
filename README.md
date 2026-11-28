@@ -25,6 +25,8 @@ Built since: photo upload, edit/pause/mark-sold listings, tournament edit, searc
 ## Payments (Monime, optional)
 Run `supabase_schema_v3_payments.sql`. Deploy the three functions in `supabase/functions` (Supabase CLI: `supabase functions deploy create-checkout payment-verify` and `supabase functions deploy payment-webhook --no-verify-jwt`). Set secrets: `supabase secrets set MONIME_SPACE_ID=... MONIME_ACCESS_TOKEN=... SITE_URL=https://your-site WEBHOOK_SECRET=<long random>`. In Monime create a webhook pointing to the payment-webhook function URL with custom header `x-webhook-secret: <same secret>`. Test with a very small amount first. Until the secrets are set, paid tournaments show "Payments are not available".
 
+**USSD popup (Orange Money / Afrimoney):** also deploy `create-ussd` (`supabase functions deploy create-ussd`). The player picks a service, we create a one-time Monime payment code and show its USSD dial string; the page then checks `payment-verify` every few seconds. In Monime, add the event `payment_code.processed` to the webhook (next to `checkout_session.completed`) so payments confirm even if the player closes the page. Provider IDs are `m17` (Orange Money) and `m18` (Afrimoney): confirm both in your Monime dashboard.
+
 
 ## Upgrade pack (v15)
 - **Listing photos**: up to 3 photos per listing (gallery on the listing page, thumbnail on cards). Run `supabase_schema_v5_images.sql` once in Supabase.
